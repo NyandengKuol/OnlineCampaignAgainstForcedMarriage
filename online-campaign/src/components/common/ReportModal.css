@@ -1,0 +1,35 @@
+/* File: src/components/modals/ReportModal.css */
+.report-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.report-icon {
+  color: #dc2626;
+}
+
+.report-intro {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.btn-danger {
+  background-color: #dc2626;
+  color: var(--text-white);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+}
+
+.success-msg {
+  color: #166534;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
