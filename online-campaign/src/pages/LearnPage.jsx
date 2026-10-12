@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { learnTopics } from '../data/learnTopics';
+import { learnTopics } from '../data/LearnTopics';
 import { BookOpen, Clock, ChevronRight, Quote } from 'lucide-react';
 import './LearnPage.css';
 
