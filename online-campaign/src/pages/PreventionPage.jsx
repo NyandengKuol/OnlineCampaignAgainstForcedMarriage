@@ -80,9 +80,6 @@ const PreventionPage = ({ setActiveTab }) => {
           <p className="banner-text">
             "Awareness, education, and support can help prevent forced marriage and protect individuals."
           </p>
-          <button className="btn btn-primary" onClick={() => setActiveTab('support')}>
-            Get Immediate Support
-          </button>
         </div>
       </section>
     </div>
