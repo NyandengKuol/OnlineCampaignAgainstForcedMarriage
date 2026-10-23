@@ -71,7 +71,7 @@ function DashboardShell({ admin, children, page, navigate, logout, user, onSelec
     try { localStorage.setItem(`campaign_notifications_read_${user?.id}`, JSON.stringify(ids)); } catch { /* The menu still works if browser storage is unavailable. */ }
   };
   return <div className={`dash-shell ${admin ? 'admin-shell' : 'user-shell'}`}>
-    {admin && <NavBar activeTab="admin" setActiveTab={setActiveTab} dashboardLabel="Dashboard" />}
+    <NavBar activeTab={admin ? 'admin' : 'dashboard'} setActiveTab={setActiveTab} dashboardLabel="Dashboard" />
     <div className="dashboard-toolbar">
       <button className="dash-mobile-menu" type="button" aria-label="Toggle dashboard sidebar" aria-expanded={mobileOpen} onClick={() => setMobileOpen((open) => !open)}>{mobileOpen ? <X size={19} /> : <Menu size={19} />}</button>
       <div className="dashboard-search-wrap"><label className="dashboard-search"><Search size={17} /><input type="search" aria-label="Search posts, resources, and FAQs" placeholder="Search posts, resources, or FAQs..." value={searchQuery} onFocus={() => setSearchOpen(true)} onChange={(event) => { setSearchQuery(event.target.value); setSearchOpen(true); }} onKeyDown={(event) => { if (event.key === 'Escape') setSearchOpen(false); if (event.key === 'Enter' && searchResults[0]) searchResults[0].action(); }} /></label>{searchOpen && query && <div className="dashboard-search-results" role="listbox">{searchResults.length ? searchResults.map((result) => <button type="button" role="option" key={result.id} onClick={() => { setSearchOpen(false); setSearchQuery(''); result.action(); }}><span>{result.type}</span><b>{result.title}</b><small>{result.detail}</small></button>) : <p>No matching posts, resources, or FAQs.</p>}</div>}</div>
