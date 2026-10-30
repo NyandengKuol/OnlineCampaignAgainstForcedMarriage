@@ -41,7 +41,8 @@ const App = () => {
   const announce = (message) => { setToast(message); window.setTimeout(() => setToast(''), 3500); };
 
   const tabPaths = { home: '/', prevention: '/prevention', campaign: '/campaign', about: '/about', learn: '/learn', faq: '/faq', resources: '/resources', login: '/login', signup: '/signup', dashboard: '/dashboard', admin: '/admin', 'view-post': '/campaign' };
-  const currentTab = Object.entries(tabPaths).find(([, path]) => path === location.pathname)?.[0] || (location.pathname.startsWith('/campaign/posts/') ? 'view-post' : 'home');
+  const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
+  const currentTab = Object.entries(tabPaths).find(([, path]) => path === normalizedPath)?.[0] || (normalizedPath.startsWith('/campaign/posts/') ? 'view-post' : 'home');
   const changeTab = (tab) => navigate(tabPaths[tab] || '/');
 
   const handleSelectPost = (post) => {
