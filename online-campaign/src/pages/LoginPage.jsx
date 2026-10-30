@@ -81,7 +81,6 @@ const LoginPage = ({ setActiveTab }) => {
       <div className="google-login-wrap"><GoogleLogin onSuccess={handleGoogleSuccess} onError={() => setNotice('Google sign-in did not complete. Confirm this site is an authorized Google OAuth origin and try again.')} text="continue_with" theme="outline" shape="pill" size="large" width={googleButtonWidth} use_fedcm_for_button={false} /></div>
       {notice && <p className="auth-notice" role="status">{notice}</p>}
       <p className="auth-switch">Don’t have an account? <button className="auth-text-button" type="button" onClick={() => setActiveTab('signup')}>Sign up</button></p>
-      <p className="auth-legal">Privacy Policy · Terms of Service</p>
     </section>
   </main>;
 };
