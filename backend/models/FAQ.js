@@ -9,7 +9,13 @@ const FAQSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  category: { type: String, default: 'General' },
+  category: {
+    type: String,
+    enum: ['Rights', 'Support', 'Prevention', 'Submitted'],
+    required: true,
+    default: 'Submitted',
+    trim: true,
+  },
   sourceInquiry: { type: mongoose.Schema.Types.ObjectId, ref: 'CaseReport', unique: true, sparse: true },
   status: { type: String, enum: ['published', 'archived'], default: 'published' }
 }, { timestamps: true });

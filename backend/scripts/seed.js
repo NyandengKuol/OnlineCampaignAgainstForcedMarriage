@@ -7,7 +7,7 @@ const Resource = require('../models/Resource');
 // Original mock data
 const faqs = [
   {
-    category: 'General',
+    category: 'Submitted',
     question: 'What is a forced marriage?',
     answer: 'A forced marriage is one where one or both people do not (or cannot) consent to the marriage and pressure or abuse is used to force them into it.'
   },

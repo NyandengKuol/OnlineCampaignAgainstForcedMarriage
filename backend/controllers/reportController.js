@@ -48,7 +48,7 @@ const updateReport = async (req, res) => {
     if (report.type === 'question' && !report.parentReport && report.answer) {
       await FAQ.findOneAndUpdate(
         { sourceInquiry: report._id },
-        { question: report.details, answer: report.answer, category: 'General', status: 'published' },
+        { question: report.details, answer: report.answer, category: 'Submitted', status: 'published' },
         { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true }
       );
     }

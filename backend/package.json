@@ -7,6 +7,7 @@
     "start": "node index.js",
     "seed": "node scripts/seed.js",
     "repair:post-categories": "node scripts/repair-post-categories.js",
+    "repair:faq-categories": "node scripts/repair-faq-categories.js",
     "test": "node --test"
   },
   "keywords": [],

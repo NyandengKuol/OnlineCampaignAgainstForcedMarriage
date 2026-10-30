@@ -148,7 +148,7 @@ export const deletePostRecord = async (id) => {
 export const getFaqs = async () => {
   const res = await fetch(`${API_URL}/content/faqs`);
   if (!res.ok) throw new Error('Failed to fetch faqs');
-  return (await res.json()).map((faq) => ({ ...faq, id: faq._id, category: faq.category || 'General' }));
+  return (await res.json()).map((faq) => ({ ...faq, id: faq._id, category: faq.category || 'Submitted' }));
 };
 
 export const getResources = async () => {

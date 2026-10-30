@@ -1,5 +1,6 @@
 const FAQ = require('../models/FAQ');
 const Resource = require('../models/Resource');
+const FAQ_CATEGORIES = ['Rights', 'Support', 'Prevention', 'Submitted'];
 
 const listFAQs = async (req, res) => {
   try { return res.json(await FAQ.find({ status: { $ne: 'archived' } }).sort({ createdAt: -1 })); }
@@ -15,13 +16,16 @@ const createFAQ = async (req, res) => {
   const question = typeof req.body.question === 'string' ? req.body.question.trim() : '';
   const answer = typeof req.body.answer === 'string' ? req.body.answer.trim() : '';
   if (!question || !answer) return res.status(400).json({ message: 'Question and answer are required' });
-  try { return res.status(201).json(await FAQ.create({ question, answer, category: req.body.category || 'General' })); }
+  const category = typeof req.body.category === 'string' ? req.body.category.trim() : '';
+  if (!FAQ_CATEGORIES.includes(category)) return res.status(400).json({ message: 'Choose a valid FAQ category' });
+  try { return res.status(201).json(await FAQ.create({ question, answer, category })); }
   catch (error) { return res.status(500).json({ message: error.message }); }
 };
 
 const updateFAQ = async (req, res) => {
   const updates = {};
   for (const key of ['question', 'answer', 'category', 'status']) if (typeof req.body[key] === 'string') updates[key] = req.body[key].trim();
+  if (updates.category && !FAQ_CATEGORIES.includes(updates.category)) return res.status(400).json({ message: 'Choose a valid FAQ category' });
   try {
     const faq = await FAQ.findByIdAndUpdate(req.params.id, updates, { new: true, runValidators: true });
     return faq ? res.json(faq) : res.status(404).json({ message: 'FAQ not found' });

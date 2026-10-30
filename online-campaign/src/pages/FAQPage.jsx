@@ -14,7 +14,7 @@ const FAQPage = () => {
   const [questionText, setQuestionText] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [questionError, setQuestionError] = useState('');
-  const categories = ['All', 'General', 'Rights', 'Support', 'Prevention', 'Submitted'];
+  const categories = ['All', 'Rights', 'Support', 'Prevention', 'Submitted'];
 
   const filteredFaqs = faqs.filter((faq) => {
     const categoryMatches = selectedCategory === 'All' || faq.category === selectedCategory;
