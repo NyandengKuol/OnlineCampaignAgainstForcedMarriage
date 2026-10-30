@@ -4,8 +4,9 @@ import {
   Activity, AlertTriangle, ArrowRight, BookOpen,
   Bell, CheckCircle2, ChevronDown, CircleHelp, FileText, Flag, Heart, Home, LogOut,
   Menu, MessageCircle, MessageSquare, Plus, Search, Send, Settings, ShieldAlert, ShieldCheck, Users, X,
-  ChartNoAxesCombined, HandHeart, Megaphone, UserRound, UserRoundCog
+  ChartNoAxesCombined, HandHeart, Megaphone, Sprout, UserRound, UserRoundCog
 } from 'lucide-react';
+import awarenessSpotlightImage from '../assets/awareness-spotlight.png';
 import { useAppData } from '../context/AppDataContext';
 import { useAuth } from '../context/AuthContext';
 import NavBar from '../components/Layout/Navbar';
@@ -167,6 +168,29 @@ function ReportRequestCard({ item, resources, followUps, submitInquiry }) {
   </article>;
 }
 
+function AwarenessSpotlight({ onExplore }) {
+  return <section className="awareness-spotlight" aria-labelledby="awareness-spotlight-title">
+    <div className="awareness-spotlight-copy">
+      <span className="dashboard-section-eyebrow">AWARENESS SPOTLIGHT</span>
+      <h2 id="awareness-spotlight-title">Every Girl Deserves the Opportunity to Choose Her Future.</h2>
+      <p>Education, awareness and access to information can help create communities where every young person has the opportunity to make informed decisions about their future.</p>
+      <button type="button" className="awareness-spotlight-button" onClick={onExplore}>Explore Campaigns <ArrowRight size={17} /></button>
+    </div>
+    <div className="awareness-spotlight-image-wrap"><img src={awarenessSpotlightImage} alt="A mother holding her young child outdoors" /></div>
+  </section>;
+}
+
+function MessageToRemember() {
+  return <section className="message-to-remember" aria-labelledby="message-to-remember-title">
+    <div className="message-to-remember-mark" aria-hidden="true"><Sprout size={24} /></div>
+    <div>
+      <span className="dashboard-section-eyebrow">A MESSAGE TO REMEMBER</span>
+      <h2 id="message-to-remember-title">“Change begins when we listen, learn and stand together.”</h2>
+      <p>Every voice has the power to contribute to positive change. Together, we can promote awareness, encourage understanding and build supportive communities.</p>
+    </div>
+  </section>;
+}
+
 function UserDashboard({ onCreatePost, navigate }) {
   const { user, logout } = useAuth();
   const location = useLocation();
@@ -239,7 +263,7 @@ function UserDashboard({ onCreatePost, navigate }) {
   };
   const sectionPanel = (key, content) => <section className={`user-section-panel ${section === key ? 'is-active' : ''}`} aria-hidden={section !== key}>{content}</section>;
   return <DashboardShell admin={false} page={section} onSelectSection={selectSection} navigate={navigate} logout={() => { logout(); navigate('/'); }} user={user}>
-    {sectionPanel('dashboard', <><div className="user-welcome dash-hero"><div><span className="dash-eyebrow">YOUR DASHBOARD</span><h1>{user?.name ? `Welcome back, ${user.name.split(' ')[0]}.` : 'Welcome back.'}</h1><p>Choose where you would like to contribute, find information, or manage your account.</p></div></div><div className="quick-actions"><button className="quick-action action-blue" onClick={onCreatePost}><Plus /><b>Create a Post</b><small>Share your thoughts or story</small></button><button className="quick-action action-report" onClick={() => { setReportOpen(true); setReportSent(false); }}><ShieldAlert /><b>Report a Case</b><small>Ask for help privately</small></button><button className="quick-action action-purple" onClick={() => navigate('/resources')}><BookOpen /><b>Browse Resources</b><small>Learn and get support</small></button><button className="quick-action action-coral" onClick={() => navigate('/resources')}><Users /><b>Find Support</b><small>Connect with organizations</small></button></div><div className="dash-stat-grid">{stats.map(([label, value, note, Icon, color]) => <button type="button" className="dash-stat" key={label} onClick={() => selectSection(statTargets[label])}><span className={`stat-icon ${color}`}><Icon size={18} /></span><span className="dash-stat-copy"><small>{label}</small><b>{value}</b><span>{note}</span></span></button>)}</div></>)}
+    {sectionPanel('dashboard', <><div className="user-welcome dash-hero"><div><span className="dash-eyebrow">YOUR DASHBOARD</span><h1>{user?.name ? `Welcome back, ${user.name.split(' ')[0]}.` : 'Welcome back.'}</h1><p>Choose where you would like to contribute, find information, or manage your account.</p></div></div><div className="quick-actions"><button className="quick-action action-blue" onClick={onCreatePost}><Plus /><b>Create a Post</b><small>Share your thoughts or story</small></button><button className="quick-action action-report" onClick={() => { setReportOpen(true); setReportSent(false); }}><ShieldAlert /><b>Report a Case</b><small>Ask for help privately</small></button><button className="quick-action action-purple" onClick={() => navigate('/resources')}><BookOpen /><b>Browse Resources</b><small>Learn and get support</small></button><button className="quick-action action-coral" onClick={() => navigate('/resources')}><Users /><b>Find Support</b><small>Connect with organizations</small></button></div><div className="dash-stat-grid">{stats.map(([label, value, note, Icon, color]) => <button type="button" className="dash-stat" key={label} onClick={() => selectSection(statTargets[label])}><span className={`stat-icon ${color}`}><Icon size={18} /></span><span className="dash-stat-copy"><small>{label}</small><b>{value}</b><span>{note}</span></span></button>)}</div><AwarenessSpotlight onExplore={() => navigate('/campaign')} /><MessageToRemember /></>)}
     {sectionPanel('community', <section className="dash-panel community-panel"><div className="panel-heading"><div><h2>Community Campaign</h2><p>Stories, ideas, and support from the community</p></div><div className="panel-heading-actions"><button className="text-link" onClick={onCreatePost}>Create a post <ArrowRight size={14} /></button><button className="text-link" onClick={() => navigate('/campaign')}>Open Campaign Forum <ArrowRight size={14} /></button></div></div>{posts.length ? <div className="dashboard-post-list">{posts.map((post) => <article className="dashboard-post" key={post.id}><div className="post-author-line"><span className="small-avatar">{(post.authorName || post.author?.name || 'C').slice(0, 1)}</span><span><b>{post.authorName || post.author?.name || 'Community member'}</b><small>{dateLabel(post.createdAt || post.timestamp)} · {post.category}</small></span></div><button className="post-open" onClick={() => navigate(`/campaign/posts/${post.id}`, { state: { post } })}><b>{post.title}</b><span>{post.message || post.content}</span></button><div className="post-engagement"><button onClick={() => togglePostLike(post.id)}><Heart size={15} /> {post.likes || 0}</button><button onClick={() => navigate(`/campaign/posts/${post.id}`, { state: { post } })}><MessageSquare size={15} /> {post.commentsCount || post.comments?.length || 0} replies</button></div></article>)}</div> : <div className="dashboard-empty"><MessageCircle size={22} /><span>No community posts yet.</span></div>}</section>)}
     {sectionPanel('faq', <section className="dash-panel inquiry-panel"><div className="panel-heading"><div><h2>FAQs &amp; Inquiries</h2><p>Find answers or ask the campaign team a question.</p></div><button className="text-link" onClick={() => navigate('/faq')}>View all FAQs <ArrowRight size={14} /></button></div><div className="quick-faqs">{faqs.length ? faqs.map((faq) => <details key={faq.id || faq._id}><summary>{faq.question}</summary><p>{faq.answer}</p></details>) : <p className="quick-faq-empty">Common answers will appear here soon.</p>}</div><form onSubmit={handleAskQuestion}><textarea value={question} onChange={(event) => setQuestion(event.target.value)} placeholder="What would you like to know?" aria-label="Your question" rows="3" /><button type="submit" disabled={!question.trim()}>Send question <ArrowRight size={14} /></button>{notice && <small role="status">{notice}</small>}</form></section>)}
     {sectionPanel('my-reports', <section className="dash-panel my-reports-panel"><div className="panel-heading"><div><h2>My Reports &amp; Support Requests</h2><p>Private requests you have sent to the campaign team</p></div><button className="text-link" onClick={() => { setReportOpen(true); setReportSent(false); }}>Report a case <ArrowRight size={14} /></button></div>{myReports.length ? <div className="my-reports-list">{myReports.map((item) => <ReportRequestCard key={item.id} item={item} resources={resources} followUps={inquiries.filter((entry) => entry.parentReportId === item.id)} submitInquiry={submitInquiry} />)}</div> : <div className="table-empty">You have not sent any reports or support requests yet.</div>}</section>)}
