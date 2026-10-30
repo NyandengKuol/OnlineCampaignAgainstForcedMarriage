@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
 import { GoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext';
 import { validateLogin } from '../utils/validators';
@@ -9,7 +8,6 @@ const LoginPage = ({ setActiveTab }) => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [notice, setNotice] = useState('');
@@ -70,7 +68,7 @@ const LoginPage = ({ setActiveTab }) => {
         {errors.email && <p id="email-error" className="field-error auth-field-error" role="alert">{errors.email}</p>}
 
         <label htmlFor="login-password">Password</label>
-        <div className="auth-input-wrap"><input ref={passwordRef} id="login-password" type={showPassword ? 'text' : 'password'} autoComplete="current-password" placeholder="Enter your password" value={password} onChange={(event) => { setPassword(event.target.value); setErrors((current) => ({ ...current, password: '' })); setNotice(''); }} {...fieldProps('password')} /><button type="button" className="password-toggle" onClick={() => setShowPassword((shown) => !shown)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={18} /> : <Eye size={18} />}</button></div>
+        <div className="auth-input-wrap"><input ref={passwordRef} id="login-password" type="password" autoComplete="current-password" placeholder="Enter your password" value={password} onChange={(event) => { setPassword(event.target.value); setErrors((current) => ({ ...current, password: '' })); setNotice(''); }} {...fieldProps('password')} /></div>
         {errors.password && <p id="password-error" className="field-error auth-field-error" role="alert">{errors.password}</p>}
 
         <div className="login-options"><label className="remember-row"><input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} /> Remember me</label><button className="auth-text-button" type="button" onClick={() => setNotice('Password reset is not available yet. Please contact the campaign team for help.')}>Forgot password?</button></div>

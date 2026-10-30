@@ -67,8 +67,6 @@
   font-size: .88rem;
 }
 .auth-input-wrap input::placeholder { color: #7d8588; }
-.password-toggle { display: grid; place-items: center; padding: .25rem; color: #68777b; cursor: pointer; }
-.password-toggle:hover { color: #137e76; }
 .auth-input-wrap:has(input[aria-invalid="true"]) { border-color: #b91c1c; }
 .auth-input-wrap input[aria-invalid="true"] { outline: none; }
 .auth-field-error { margin: .02rem 0 .18rem .15rem; font-size: .78rem; }
