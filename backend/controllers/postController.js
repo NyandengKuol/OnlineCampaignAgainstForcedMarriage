@@ -23,10 +23,13 @@ const listPosts = async (req, res) => {
 };
 
 const createPost = async (req, res) => {
-  const { title, content, tags, isAnonymous } = req.body;
+  const { title, content, category, tags, isAnonymous } = req.body;
   if (!title || !content) return res.status(400).json({ message: 'Title and content are required' });
+  if (!['Awareness', 'Education', 'Support', 'Prevention'].includes(category)) {
+    return res.status(400).json({ message: 'Choose a valid post category' });
+  }
   try {
-    const post = await Post.create({ title, content, tags: tags || [], author: req.user._id, isAnonymous: Boolean(isAnonymous) });
+    const post = await Post.create({ title, content, category, tags: tags || [], author: req.user._id, isAnonymous: Boolean(isAnonymous) });
     await post.populate('author', 'username role');
     const data = post.toObject();
     data.likesCount = data.likes?.length || 0;

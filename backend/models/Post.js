@@ -10,6 +10,13 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  category: {
+    type: String,
+    enum: ['Awareness', 'Education', 'Support', 'Prevention'],
+    required: true,
+    default: 'Awareness',
+    trim: true,
+  },
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

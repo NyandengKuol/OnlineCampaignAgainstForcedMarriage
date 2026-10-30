@@ -51,6 +51,7 @@ export const AppDataProvider = ({ children }) => {
         id: newPost._id,
         title: newPost.title,
         message: newPost.content,
+        category: newPost.category,
         tags: newPost.tags,
         authorName: newPost.isAnonymous ? 'Anonymous' : newPost.author?.username || user?.name || 'Unknown',
         authorId: newPost.author?._id || user?.id,

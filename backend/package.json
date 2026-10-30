@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "seed": "node scripts/seed.js",
+    "repair:post-categories": "node scripts/repair-post-categories.js",
     "test": "node --test"
   },
   "keywords": [],

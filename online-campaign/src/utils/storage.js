@@ -30,6 +30,7 @@ export const getPosts = async () => {
     id: post._id,
     title: post.title,
     message: post.content,
+    category: post.category,
     tags: post.tags,
     authorName: post.isAnonymous ? 'Anonymous' : post.author?.username || 'Unknown',
     authorId: post.isMine ? getStoredUserId() : typeof post.author === 'string' ? post.author : post.author?._id,
@@ -80,6 +81,7 @@ export const addPostComment = async (postId, text) => {
     id: post._id,
     title: post.title,
     message: post.content,
+    category: post.category,
     tags: post.tags,
     authorName: post.isAnonymous ? 'Anonymous' : post.author?.username || 'Unknown',
     authorId: post.isMine ? getStoredUserId() : typeof post.author === 'string' ? post.author : post.author?._id,
@@ -125,6 +127,7 @@ export const savePostRecord = async (postData) => {
     body: JSON.stringify({
       title: postData.title,
       content: postData.message || postData.content,
+      category: postData.category,
       tags: postData.tags || [],
       isAnonymous: Boolean(postData.isAnonymous)
     })
