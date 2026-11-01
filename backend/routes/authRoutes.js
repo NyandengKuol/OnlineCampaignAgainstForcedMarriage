@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
-const { register, login, getMe, updateMe, googleAuth } = require('../controllers/authController');
+const { register, login, forgotPassword, resetPassword, getMe, updateMe, googleAuth } = require('../controllers/authController');
 
 router.use((req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
@@ -15,6 +15,8 @@ router.use((req, res, next) => {
 
 router.post('/register', register);
 router.post('/login', login);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 router.post('/google', googleAuth);
 router.get('/me', protect, getMe);
 router.patch('/me', protect, updateMe);

@@ -231,6 +231,9 @@ export const loginUser = async (credentials) => {
   }, 'Login failed');
 };
 
+export const requestPasswordReset = (email) => authRequest('/forgot-password', { email }, 'Could not request a reset code');
+export const confirmPasswordReset = (email, code, password) => authRequest('/reset-password', { email, code, password }, 'Could not reset your password');
+
 export const loginWithGoogle = async (credential) => {
   return authRequest('/google', { credential }, 'Google sign-in failed');
 };

@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const { OAuth2Client } = require('google-auth-library');
+const { sendPasswordResetOtp } = require('../services/emailService');
 
 const generateToken = (id) => jwt.sign(
   { id },
@@ -58,6 +59,68 @@ const login = async (req, res) => {
     return res.json({ _id: user._id, username: user.username, email: user.email, role: user.role, authProvider: getAuthProvider(user), token: generateToken(user._id) });
   } catch (error) {
     return res.status(500).json({ message: error.message });
+  }
+};
+
+const resetReply = { message: 'If an email and password account exists for this address, a reset code has been sent.' };
+
+const forgotPassword = async (req, res) => {
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ message: 'Enter a valid email address' });
+  try {
+    const user = await User.findOne({ email }).select('+passwordResetCodeHash +passwordResetExpiresAt +passwordResetAttempts');
+    if (!user || user.authProvider !== 'local') return res.json(resetReply);
+
+    const code = crypto.randomInt(100000, 1000000).toString();
+    user.passwordResetCodeHash = crypto.createHash('sha256').update(`${user._id}:${code}`).digest('hex');
+    user.passwordResetExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
+    user.passwordResetAttempts = 0;
+    await user.save();
+    try {
+      await sendPasswordResetOtp({ email: user.email, code });
+    } catch (mailError) {
+      user.passwordResetCodeHash = undefined;
+      user.passwordResetExpiresAt = undefined;
+      user.passwordResetAttempts = 0;
+      await user.save();
+      console.error('Password reset email failed:', mailError.message);
+      return res.status(503).json({ message: 'Password reset email is not configured. Please contact the campaign team for help.' });
+    }
+    return res.json(resetReply);
+  } catch (error) {
+    return res.status(500).json({ message: 'Could not start password reset. Please try again.' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const email = typeof req.body.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+  const code = typeof req.body.code === 'string' ? req.body.code.trim() : '';
+  const password = typeof req.body.password === 'string' ? req.body.password : '';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !/^\d{6}$/.test(code)) return res.status(400).json({ message: 'Enter the email address and 6-digit reset code' });
+  if (password.length < 8 || !/[A-Za-z]/.test(password) || !/\d/.test(password)) return res.status(400).json({ message: 'Use at least 8 characters with a letter and a number' });
+  try {
+    const user = await User.findOne({ email, authProvider: 'local' }).select('+passwordResetCodeHash +passwordResetExpiresAt +passwordResetAttempts');
+    const validReset = user && user.passwordResetCodeHash && user.passwordResetExpiresAt > new Date() && user.passwordResetAttempts < 5;
+    const codeHash = user ? crypto.createHash('sha256').update(`${user._id}:${code}`).digest('hex') : '';
+    if (!validReset || codeHash !== user.passwordResetCodeHash) {
+      if (user) {
+        user.passwordResetAttempts += 1;
+        if (user.passwordResetAttempts >= 5) {
+          user.passwordResetCodeHash = undefined;
+          user.passwordResetExpiresAt = undefined;
+        }
+        await user.save();
+      }
+      return res.status(400).json({ message: 'That reset code is invalid or has expired. Request a new code and try again.' });
+    }
+    user.password = password;
+    user.passwordResetCodeHash = undefined;
+    user.passwordResetExpiresAt = undefined;
+    user.passwordResetAttempts = 0;
+    await user.save();
+    return res.json({ message: 'Your password has been reset. You can now sign in.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Could not reset your password. Please try again.' });
   }
 };
 
@@ -131,4 +194,4 @@ const updateMe = async (req, res) => {
   }
 };
 
-module.exports = { register, login, googleAuth, getMe, updateMe };
+module.exports = { register, login, forgotPassword, resetPassword, googleAuth, getMe, updateMe };

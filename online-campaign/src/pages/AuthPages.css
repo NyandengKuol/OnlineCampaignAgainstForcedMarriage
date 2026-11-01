@@ -28,6 +28,12 @@
   color: #68777b;
   font-size: .86rem;
 }
+.auth-back-button { display: inline-flex; align-items: center; gap: .35rem; margin: 0 0 .8rem; color: #087a72; font-size: .78rem; font-weight: 800; cursor: pointer; }
+.auth-flow-icon { margin-bottom: .35rem; color: #168178; }
+.auth-flow-success { color: #14847b; }
+.reset-card .auth-intro strong { color: #31584e; overflow-wrap: anywhere; }
+.reset-resend { display: block; margin: .7rem auto 0; }
+.auth-notice-error { border-color: #e7b7b1; color: #9f3029; background: #fff0ee; }
 
 .auth-form { display: grid; gap: .32rem; }
 .auth-form > label {

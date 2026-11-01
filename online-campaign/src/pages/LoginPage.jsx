@@ -71,7 +71,7 @@ const LoginPage = ({ setActiveTab }) => {
         <div className="auth-input-wrap"><input ref={passwordRef} id="login-password" type="password" autoComplete="current-password" placeholder="Enter your password" value={password} onChange={(event) => { setPassword(event.target.value); setErrors((current) => ({ ...current, password: '' })); setNotice(''); }} {...fieldProps('password')} /></div>
         {errors.password && <p id="password-error" className="field-error auth-field-error" role="alert">{errors.password}</p>}
 
-        <div className="login-options"><label className="remember-row"><input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} /> Remember me</label><button className="auth-text-button" type="button" onClick={() => setNotice('Password reset is not available yet. Please contact the campaign team for help.')}>Forgot password?</button></div>
+        <div className="login-options"><label className="remember-row"><input type="checkbox" checked={rememberMe} onChange={(event) => setRememberMe(event.target.checked)} /> Remember me</label><button className="auth-text-button" type="button" onClick={() => setActiveTab('forgot-password')}>Forgot password?</button></div>
         <button className="auth-submit" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Signing in…' : 'Sign In'}</button>
       </form>
 

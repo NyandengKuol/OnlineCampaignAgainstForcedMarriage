@@ -40,7 +40,7 @@ const NavBar = ({ activeTab, setActiveTab, rightContent, dashboardLabel }) => {
 
         <div className="header-actions">
           {user ? <>{rightContent}<button className="nav-link account-link" onClick={() => { logout(); setActiveTab('home'); }}><span>Log Out</span></button></> : <>
-            <button className={`nav-link account-link ${activeTab === 'login' || activeTab === 'signup' ? 'active' : ''}`} onClick={() => setActiveTab('login')} aria-current={activeTab === 'login' || activeTab === 'signup' ? 'page' : undefined}><span>Log In</span></button>
+            <button className={`nav-link account-link ${['login', 'signup', 'forgot-password'].includes(activeTab) ? 'active' : ''}`} onClick={() => setActiveTab('login')} aria-current={['login', 'signup', 'forgot-password'].includes(activeTab) ? 'page' : undefined}><span>Log In</span></button>
           </>}
         </div>
       </div>

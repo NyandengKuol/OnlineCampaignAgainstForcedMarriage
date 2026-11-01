@@ -15,6 +15,7 @@ import AboutPage from './pages/AboutPage';
 import LearnPage from './pages/LearnPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import { useAppData } from './context/AppDataContext';
 import { useAuth } from './context/AuthContext';
 
@@ -40,7 +41,7 @@ const App = () => {
   useEffect(() => { if (!deletingPost) return undefined; const onKeyDown = (event) => { if (event.key === 'Escape') setDeletingPost(null); if (event.key === 'Tab') { const controls = [...document.querySelectorAll('.delete-dialog button')]; if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls.at(-1).focus(); } else if (!event.shiftKey && document.activeElement === controls.at(-1)) { event.preventDefault(); controls[0].focus(); } } }; document.addEventListener('keydown', onKeyDown); window.setTimeout(() => document.querySelector('.delete-dialog button')?.focus(), 0); return () => document.removeEventListener('keydown', onKeyDown); }, [deletingPost]);
   const announce = (message) => { setToast(message); window.setTimeout(() => setToast(''), 3500); };
 
-  const tabPaths = { home: '/', prevention: '/prevention', campaign: '/campaign', about: '/about', learn: '/learn', faq: '/faq', resources: '/resources', login: '/login', signup: '/signup', dashboard: '/dashboard', admin: '/admin', 'view-post': '/campaign' };
+  const tabPaths = { home: '/', prevention: '/prevention', campaign: '/campaign', about: '/about', learn: '/learn', faq: '/faq', resources: '/resources', login: '/login', signup: '/signup', 'forgot-password': '/forgot-password', dashboard: '/dashboard', admin: '/admin', 'view-post': '/campaign' };
   const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
   const currentTab = Object.entries(tabPaths).find(([, path]) => path === normalizedPath)?.[0] || (normalizedPath.startsWith('/campaign/posts/') ? 'view-post' : 'home');
   const changeTab = (tab) => navigate(tabPaths[tab] || '/');
@@ -76,6 +77,7 @@ const App = () => {
           <Route path="/resources" element={<ResourcesPage />} />
           <Route path="/login" element={<LoginPage setActiveTab={changeTab} />} />
           <Route path="/signup" element={<SignupPage setActiveTab={changeTab} />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage setActiveTab={changeTab} />} />
           <Route path="/dashboard" element={isLoading ? <div className="auth-session-check" role="status">Checking your session…</div> : user?.isAdmin ? <Navigate to="/admin" replace /> : user ? <DashboardPage onCreatePost={() => setIsCreateModalOpen(true)} /> : <Navigate to="/login" replace />} />
           <Route path="/admin" element={isLoading ? <div className="auth-session-check" role="status">Checking your session…</div> : user?.isAdmin ? <DashboardPage admin /> : <Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />

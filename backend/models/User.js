@@ -29,6 +29,9 @@ const UserSchema = new mongoose.Schema({
     enum: ['local', 'google'],
     default: 'local',
   },
+  passwordResetCodeHash: { type: String, select: false },
+  passwordResetExpiresAt: { type: Date, select: false },
+  passwordResetAttempts: { type: Number, default: 0, select: false },
 }, { timestamps: true });
 
 UserSchema.pre('save', async function () {
