@@ -160,6 +160,7 @@ export const getResources = async () => {
 export const createFAQRecord = (data) => requestAdmin('/content/faqs', 'POST', data);
 export const deleteFAQRecord = (id) => requestAdmin(`/content/faqs/${id}`, 'DELETE');
 export const createResourceRecord = (data) => requestAdmin('/content/resources', 'POST', data);
+export const updateResourceRecord = (id, data) => requestAdmin(`/content/resources/${id}`, 'PUT', data);
 export const deleteResourceRecord = (id) => requestAdmin(`/content/resources/${id}`, 'DELETE');
 export const moderatePostRecord = (id, status) => requestAdmin(`/posts/${id}/moderation`, 'PATCH', { status });
 export const moderateCommentRecord = (id, status, action) => requestAdmin(`/posts/comments/${id}/moderation`, 'PATCH', { status, action });

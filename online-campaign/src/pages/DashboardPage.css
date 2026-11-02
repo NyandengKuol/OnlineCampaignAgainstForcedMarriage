@@ -3892,6 +3892,13 @@ tbody td small {
 .admin-form-dialog h2 { margin: 3px 0 0; color: #315448; font-size: 21px; }
 .admin-form-dialog > header button { color: #315448; cursor: pointer; }
 .admin-form-dialog .admin-content-form { margin: 0; }
+.admin-form-actions .admin-form-cancel {
+  background: #edf1ed;
+  color: #315448;
+}
+.admin-active-admin .admin-lower-grid.overview-moderation-open .moderation-comments-panel {
+  display: block;
+}
 .section-stat-grid { margin-bottom: 16px; }
 @media (max-width: 700px) {
   .admin-metric-grid > .admin-create-button { min-height: 65px; }
