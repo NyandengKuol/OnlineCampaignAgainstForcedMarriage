@@ -3829,6 +3829,74 @@ tbody td small {
 .settings-save { width: fit-content; padding: 10px 16px; border: 0; border-radius: 7px; background: #17675f; color: #fff; font-weight: 800; cursor: pointer; }
 .settings-saved { align-self: center; color: #17675f; font-size: 13px; font-weight: 700; }
 @media (max-width: 700px) { .settings-form { grid-template-columns: 1fr; } }
+
+/* Keep the active workspace anchored on the left and use the full available width. */
+.admin-shell .dash-main:not(.admin-active-settings) .admin-metric-grid {
+  display: grid !important;
+}
+.admin-shell .dash-main:not(.admin-active-settings) .admin-lower-grid {
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+}
+.admin-active-reports .content-management,
+.admin-active-reports .moderation-panel {
+  display: none;
+}
+.admin-active-reports .inquiry-management {
+  display: block;
+}
+.admin-active-admin .support-orgs,
+.admin-active-resources .support-orgs {
+  display: block;
+}
+.admin-active-admin .support-orgs .panel-heading,
+.admin-active-admin .support-orgs .table-scroll {
+  display: none;
+}
+.admin-metric-grid > .admin-create-button {
+  min-height: 82px;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px;
+  text-align: center;
+}
+.admin-form-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgb(15 23 42 / 65%);
+  backdrop-filter: blur(4px);
+}
+.admin-form-dialog {
+  width: min(100%, 620px);
+  max-height: calc(100vh - 36px);
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 20px 55px #132e2a55;
+}
+.admin-form-dialog > header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.admin-form-dialog h2 { margin: 3px 0 0; color: #315448; font-size: 21px; }
+.admin-form-dialog > header button { color: #315448; cursor: pointer; }
+.admin-form-dialog .admin-content-form { margin: 0; }
+.section-stat-grid { margin-bottom: 16px; }
+@media (max-width: 700px) {
+  .admin-metric-grid > .admin-create-button { min-height: 65px; }
+  .admin-form-dialog { padding: 16px; }
+}
 .dash-nav-item,
 .dash-panel,
 .dash-stat {
