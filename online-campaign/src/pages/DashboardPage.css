@@ -3838,6 +3838,11 @@ tbody td small {
   grid-template-columns: minmax(0, 1fr);
   width: 100%;
 }
+.admin-shell .dash-main .inquiry-management {
+  grid-column: 1;
+  grid-row: auto;
+  width: 100%;
+}
 .admin-active-reports .content-management,
 .admin-active-reports .moderation-panel {
   display: none;
