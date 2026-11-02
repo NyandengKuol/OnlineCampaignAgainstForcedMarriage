@@ -3897,6 +3897,19 @@ tbody td small {
 .admin-form-dialog h2 { margin: 3px 0 0; color: #315448; font-size: 21px; }
 .admin-form-dialog > header button { color: #315448; cursor: pointer; }
 .admin-form-dialog .admin-content-form { margin: 0; }
+.admin-form-dialog .admin-form-actions {
+  position: sticky;
+  bottom: -20px;
+  z-index: 2;
+  margin: 0 -14px -14px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid #e1e8e2;
+  background: #fbfcf9;
+}
+.admin-form-dialog .admin-form-actions button[type="submit"] {
+  background: #17675f;
+  color: #fff;
+}
 .admin-form-actions .admin-form-cancel {
   background: #edf1ed;
   color: #315448;
