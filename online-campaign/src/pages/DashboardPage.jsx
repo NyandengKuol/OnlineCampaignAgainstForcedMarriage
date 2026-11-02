@@ -37,6 +37,7 @@ const dateLabel = (value) => {
 
 function DashboardShell({ admin, children, page, navigate, logout, user, onSelectSection }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [adminSection, setAdminSection] = useState(page);
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -47,6 +48,7 @@ function DashboardShell({ admin, children, page, navigate, logout, user, onSelec
   const { posts, inquiries, resources, faqs, refreshData } = useAppData();
   const setActiveTab = (tab) => navigate(({ home: '/', about: '/about', learn: '/learn', prevention: '/prevention', campaign: '/campaign', faq: '/faq', resources: '/resources', dashboard: '/dashboard', admin: '/admin' })[tab] || '/');
   const entries = admin ? adminNav : userNav;
+  const activePage = admin ? adminSection : page;
   const notifications = admin
     ? inquiries.filter((item) => item.status === 'pending').map((item) => ({ id: `report:${item.id}`, title: 'New case report', detail: item.category || 'Support request', date: item.createdAt, target: 'inquiries' }))
     : [
@@ -80,13 +82,31 @@ function DashboardShell({ admin, children, page, navigate, logout, user, onSelec
     </div>
     <div className="dash-workspace">
       <aside className={`dash-nav ${mobileOpen ? 'open' : ''}`}>
-        <div className="dash-nav-list">{admin ? entries.map(([label, key, Icon], index) => <Fragment key={`${key}-${label}`}>{[1, 4, 6, 8].includes(index) && <div className="dash-nav-group-label">{index === 1 ? 'MANAGEMENT' : index === 4 ? 'CONTENT' : index === 6 ? 'REVIEW' : 'SYSTEM'}</div>}<button type="button" className={`dash-nav-item ${page === key ? 'selected' : ''}`} onClick={() => { setMobileOpen(false); if (key === 'admin') navigate('/admin'); else { const targets = { content: 'content', moderation: 'moderation', posts: 'content', resources: 'support-resources', inquiries: 'inquiries', reports: 'moderation', analytics: 'analytics', settings: 'settings' }; document.getElementById(targets[key])?.scrollIntoView({ behavior: 'smooth' }); } }}><Icon size={17} /><span>{label}</span>{['content', 'moderation', 'posts'].includes(key) && <ChevronDown size={13} className="nav-chevron" />}</button></Fragment>) : entries.map(([group, label, key, Icon], index) => <Fragment key={key}>{index === 0 || entries[index - 1][0] !== group ? <div className="dash-nav-group-label">{group}</div> : null}<button type="button" className={`dash-nav-item ${page === key ? 'selected' : ''}`} onClick={() => { setMobileOpen(false); onSelectSection?.(key); }}><Icon size={17} /><span>{label}</span>{key === 'my-reports' && <span className="nav-count">{inquiries.filter((item) => item.type !== 'question').length}</span>}</button></Fragment>)}</div>
+        <div className="dash-nav-list">{admin ? entries.map(([label, key, Icon], index) => <Fragment key={`${key}-${label}`}>{[1, 4, 6, 8].includes(index) && <div className="dash-nav-group-label">{index === 1 ? 'MANAGEMENT' : index === 4 ? 'CONTENT' : index === 6 ? 'REVIEW' : 'SYSTEM'}</div>}<button type="button" className={`dash-nav-item ${activePage === key ? 'selected' : ''}`} onClick={() => { setMobileOpen(false); setAdminSection(key); onSelectSection?.(key); }}><Icon size={17} /><span>{label}</span></button></Fragment>) : entries.map(([group, label, key, Icon], index) => <Fragment key={key}>{index === 0 || entries[index - 1][0] !== group ? <div className="dash-nav-group-label">{group}</div> : null}<button type="button" className={`dash-nav-item ${activePage === key ? 'selected' : ''}`} onClick={() => { setMobileOpen(false); onSelectSection?.(key); }}><Icon size={17} /><span>{label}</span>{key === 'my-reports' && <span className="nav-count">{inquiries.filter((item) => item.type !== 'question').length}</span>}</button></Fragment>)}</div>
         <div className="dash-nav-bottom"><div className="dash-nav-illustration"><HandHeart size={40} /><p>Educate<br />Support<br />Empower</p><small>Together against forced marriage</small></div><button type="button" className="dash-nav-item logout-link" onClick={logout}><LogOut size={17} /><span>Log out</span></button></div>
       </aside>
-      <main className="dash-main">{children}<footer className="dash-footer" id={admin ? 'settings' : undefined}><ShieldCheck size={20} /><span><b>{admin ? 'Building a safer, more informed community.' : 'Your voice matters.'}</b><small>Together we can end forced marriage through awareness, support and action.</small></span><span className="footer-sprout">✳</span></footer></main>
+      <main className={`dash-main ${admin ? `admin-active-${adminSection}` : ''}`}>{children}{admin && adminSection === 'settings' && <AdminSettingsPanel user={user} />}<footer className="dash-footer"><ShieldCheck size={20} /><span><b>{admin ? 'Building a safer, more informed community.' : 'Your voice matters.'}</b><small>Together we can end forced marriage through awareness, support and action.</small></span><span className="footer-sprout">✳</span></footer></main>
     </div>
     {profileOpen && <ProfileModal user={user} onClose={() => setProfileOpen(false)} />}
   </div>;
+}
+
+function AdminSettingsPanel({ user }) {
+  const [saved, setSaved] = useState(false);
+  const save = (event) => {
+    event.preventDefault();
+    setSaved(true);
+  };
+  return <section className="admin-settings-panel" aria-labelledby="admin-settings-title">
+    <div className="admin-heading"><div><span className="dash-eyebrow">SYSTEM</span><h1 id="admin-settings-title">Settings</h1><p>Manage the platform details, alerts, and community safety preferences.</p></div></div>
+    <form onSubmit={save} className="settings-form">
+      <section><h2>Platform details</h2><label>Platform name<input defaultValue="Together Against Forced Marriage" /></label><label>Support email<input type="email" defaultValue={user?.email || ''} /></label><label>Support phone<input type="tel" placeholder="Add a public support number" /></label></section>
+      <section><h2>Notifications</h2><label className="settings-check"><input type="checkbox" defaultChecked /> Alert me about new reports and support requests</label><label className="settings-check"><input type="checkbox" defaultChecked /> Alert me when community content is flagged</label></section>
+      <section><h2>Moderation &amp; safety</h2><label>Words or phrases to flag<textarea rows="3" placeholder="Add words or phrases, separated by commas" /></label><label className="settings-check"><input type="checkbox" defaultChecked /> Require review for newly submitted comments</label></section>
+      <section><h2>Administrator account</h2><label>Administrator email<input value={user?.email || ''} readOnly /></label><small>Account name and password are managed from your profile and sign-in options.</small></section>
+      <button type="submit" className="settings-save">Save settings</button>{saved && <span className="settings-saved" role="status">Settings saved for this session.</span>}
+    </form>
+  </section>;
 }
 
 function ProfileModal({ user, onClose, inline = false }) {
@@ -315,6 +335,7 @@ function AdminQuestionAnswer({ item, updateInquiry }) {
 
 function AdminContentForm({ type, onSaved }) {
   const isFaq = type === 'faq';
+  const [formOpen, setFormOpen] = useState(isFaq);
   const initialValues = isFaq
     ? { question: '', answer: '', category: 'Rights' }
     : { title: '', category: 'Health & Protection', description: '', url: '', phone: '', email: '', address: '', hours: '', linkLabel: '', provider: '', award: '', eligibility: '', studyLevel: '', deadline: '' };
@@ -329,7 +350,7 @@ function AdminContentForm({ type, onSaved }) {
     setMessage('');
     try {
       if (isFaq) await createFAQRecord(values);
-      else await createResourceRecord({ ...values, type: resourceType, category: resourceType === 'scholarship' ? 'Scholarships' : values.category });
+      else await createResourceRecord({ ...values, type: resourceType === 'scholarship' ? 'scholarship' : 'support', category: resourceType === 'scholarship' ? 'Scholarships' : values.category });
       setValues(initialValues);
       setResourceType('support');
       setMessage(isFaq ? 'FAQ published for users.' : 'Resource added and published for users.');
@@ -337,7 +358,7 @@ function AdminContentForm({ type, onSaved }) {
     } catch (error) { setMessage(error.message || 'Could not save this content.'); }
     finally { setSaving(false); }
   };
-  return <form className="admin-content-form" onSubmit={submit}>
+  return <>{!isFaq && <button type="button" className="admin-create-button" onClick={() => setFormOpen((open) => !open)}>{formOpen ? 'Close create form' : 'Create support, organization, or resource'}</button>}{(isFaq || formOpen) && <form className="admin-content-form" onSubmit={submit}>
     <h3>{isFaq ? 'Add a frequently asked question' : 'Add a support organization or resource'}</h3>
     {isFaq ? <>
       <label>Question<input name="question" value={values.question} onChange={setField} required maxLength={240} /></label>
@@ -360,7 +381,7 @@ function AdminContentForm({ type, onSaved }) {
       <label>Website button text (optional)<input name="linkLabel" value={values.linkLabel} onChange={setField} placeholder={resourceType === 'scholarship' ? 'View scholarship / apply' : 'Visit website'} /></label>
     </>}
     <div className="admin-form-actions"><button type="submit" disabled={saving}>{saving ? 'Saving…' : isFaq ? 'Publish FAQ' : 'Add resource'}</button>{message && <span role="status">{message}</span>}</div>
-  </form>;
+  </form>}</>;
 }
 
 function AdminDashboard({ navigate }) {

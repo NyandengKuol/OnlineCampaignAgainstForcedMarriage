@@ -3715,6 +3715,106 @@ tbody td small {
 .saved-resource-row {
   cursor: default;
 }
+
+/* Admin sidebar views: each item now changes the main workspace instead of scrolling an overview. */
+.admin-active-admin .admin-metric-grid,
+.admin-active-admin .content-management,
+.admin-active-admin .moderation-comments-panel,
+.admin-active-admin .support-orgs,
+.admin-active-admin .inquiry-management,
+.admin-active-admin .dash-footer {
+  display: none;
+}
+.admin-active-content .admin-metric-grid,
+.admin-active-content .admin-charts,
+.admin-active-content .moderation-panel,
+.admin-active-content .moderation-comments-panel,
+.admin-active-content .support-orgs,
+.admin-active-content .inquiry-management,
+.admin-active-content .dash-footer,
+.admin-active-posts .admin-metric-grid,
+.admin-active-posts .admin-charts,
+.admin-active-posts .moderation-panel,
+.admin-active-posts .moderation-comments-panel,
+.admin-active-posts .support-orgs,
+.admin-active-posts .inquiry-management,
+.admin-active-posts .dash-footer,
+.admin-active-moderation .admin-metric-grid,
+.admin-active-moderation .admin-charts,
+.admin-active-moderation .content-management,
+.admin-active-moderation .support-orgs,
+.admin-active-moderation .inquiry-management,
+.admin-active-moderation .dash-footer,
+.admin-active-resources .admin-metric-grid,
+.admin-active-resources .admin-charts,
+.admin-active-resources .content-management,
+.admin-active-resources .moderation-panel,
+.admin-active-resources .moderation-comments-panel,
+.admin-active-resources .inquiry-management,
+.admin-active-resources .dash-footer,
+.admin-active-inquiries .admin-metric-grid,
+.admin-active-inquiries .admin-charts,
+.admin-active-inquiries .content-management,
+.admin-active-inquiries .moderation-panel,
+.admin-active-inquiries .moderation-comments-panel,
+.admin-active-inquiries .support-orgs,
+.admin-active-inquiries .dash-footer,
+.admin-active-reports .admin-metric-grid,
+.admin-active-reports .admin-charts,
+.admin-active-reports .support-orgs,
+.admin-active-reports .inquiry-management,
+.admin-active-reports .moderation-comments-panel,
+.admin-active-reports .dash-footer,
+.admin-active-analytics .admin-metric-grid,
+.admin-active-analytics .content-management,
+.admin-active-analytics .moderation-panel,
+.admin-active-analytics .moderation-comments-panel,
+.admin-active-analytics .support-orgs,
+.admin-active-analytics .inquiry-management,
+.admin-active-analytics .dash-footer,
+.admin-active-settings > :not(.admin-settings-panel) {
+  display: none;
+}
+.admin-active-content .admin-heading,
+.admin-active-posts .admin-heading,
+.admin-active-moderation .admin-heading,
+.admin-active-resources .admin-heading,
+.admin-active-inquiries .admin-heading,
+.admin-active-reports .admin-heading,
+.admin-active-analytics .admin-heading {
+  margin-bottom: 18px;
+}
+.admin-create-button {
+  margin: 0 0 14px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 7px;
+  background: #17675f;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.admin-create-button:hover { background: #10554f; }
+.admin-settings-panel { max-width: 980px; }
+.settings-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+.settings-form > section {
+  padding: 18px;
+  border: 1px solid #e1e8e2;
+  border-radius: 10px;
+  background: #fff;
+}
+.settings-form h2 { margin: 0 0 13px; color: #315448; font-size: 16px; }
+.settings-form label { display: grid; gap: 6px; margin-top: 10px; color: #435b50; font-size: 12px; font-weight: 700; }
+.settings-form input:not([type="checkbox"]), .settings-form textarea { width: 100%; padding: 9px; border: 1px solid #d8e2db; border-radius: 6px; color: #31483e; font: inherit; }
+.settings-form .settings-check { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.settings-form small { color: #738278; font-size: 11px; line-height: 1.5; }
+.settings-save { width: fit-content; padding: 10px 16px; border: 0; border-radius: 7px; background: #17675f; color: #fff; font-weight: 800; cursor: pointer; }
+.settings-saved { align-self: center; color: #17675f; font-size: 13px; font-weight: 700; }
+@media (max-width: 700px) { .settings-form { grid-template-columns: 1fr; } }
 .dash-nav-item,
 .dash-panel,
 .dash-stat {
