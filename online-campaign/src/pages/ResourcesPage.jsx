@@ -13,17 +13,22 @@ const ResourcesPage = () => {
   const { resources } = useAppData();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') || '');
+  const searchQuery = searchParams.get('search') || '';
   const [savedIds, setSavedIds] = useState(() => readSavedResourceIds(user?.id));
-  useEffect(() => setSearchQuery(searchParams.get('search') || ''), [searchParams]);
   useEffect(() => {
     const sync = (event) => { if (!event?.detail?.userId || event.detail.userId === user?.id) setSavedIds(readSavedResourceIds(user?.id)); };
     window.addEventListener('saved-resources-changed', sync);
     window.addEventListener('storage', sync);
     return () => { window.removeEventListener('saved-resources-changed', sync); window.removeEventListener('storage', sync); };
   }, [user?.id]);
+  const updateSearchQuery = (value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set('search', value);
+    else next.delete('search');
+    setSearchParams(next, { replace: true });
+  };
   const toggleSaved = (resourceId) => {
     if (!user?.id) { navigate('/login'); return; }
     const id = String(resourceId);
@@ -57,7 +62,7 @@ const ResourcesPage = () => {
         <div><span className="eyebrow">LEGAL INFORMATION</span><h2 id="legal-summary-title">South Sudan Child Act 2008</h2><p>The Act defines a child as a person under 18. It directs the government to take measures to abolish child marriage and other harmful practices (section 36(2)(o)). It also says suspected infringements of a child’s rights may be reported to a Chief or Social Worker, a local government official, the police, or the Public Attorney (section 34). <a href="https://www.mogei.gov.ss/super/assets/documents/resources/South%20Sudan_Child%20ACT_2008_en.pdf" target="_blank" rel="noreferrer">Read the Act from the Ministry of General Education and Instruction (PDF)</a>.</p><p className="legal-note">This is general information, not legal advice. A qualified South Sudan legal professional can explain how the law applies to an individual situation.</p></div>
       </section>
 
-      <div className="resources-controls-bar mb-4"><div className="search-box"><Search size={18} className="search-icon" /><input type="search" placeholder="Search support information..." aria-label="Search support information" value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} /></div><div className="category-pills" aria-label="Filter resources by category">{resourceCategories.map((category) => <button key={category} className={`pill-btn ${selectedCategory === category ? 'active' : ''}`} aria-pressed={selectedCategory === category} onClick={() => setSelectedCategory(category)}>{category}</button>)}</div></div>
+      <div className="resources-controls-bar mb-4"><div className="search-box"><Search size={18} className="search-icon" /><input type="search" placeholder="Search support information..." aria-label="Search support information" value={searchQuery} onChange={(event) => updateSearchQuery(event.target.value)} /></div><div className="category-pills" aria-label="Filter resources by category">{resourceCategories.map((category) => <button key={category} className={`pill-btn ${selectedCategory === category ? 'active' : ''}`} aria-pressed={selectedCategory === category} onClick={() => setSelectedCategory(category)}>{category}</button>)}</div></div>
 
       <div className="resources-grid">{filteredResources.length === 0 ? <p className="no-resources">No resources match your search.</p> : filteredResources.map((item) => <article key={item.id} className="resource-card"><div className="card-top">{iconFor(item.category)}<span className="resource-category-badge">{item.category || 'Resource'}</span></div><h3>{item.title}</h3>{item.provider && <p className="resource-detail"><strong>Provider:</strong> {item.provider}</p>}<p className="res-desc">{item.desc}</p>{item.type === 'scholarship' && <div className="scholarship-details">{item.award && <p className="resource-detail"><strong>Award:</strong> {item.award}</p>}{item.studyLevel && <p className="resource-detail"><strong>Study level:</strong> {item.studyLevel}</p>}{item.eligibility && <p className="resource-detail"><strong>Eligibility:</strong> {item.eligibility}</p>}{item.deadline && <p className="resource-detail"><strong>Deadline:</strong> {item.deadline}</p>}</div>}{item.phone && <p className="resource-detail"><strong>Phone:</strong> <a href={`tel:${item.phone.replaceAll(' ', '')}`}>{item.phone}</a></p>}{item.email && <p className="resource-detail"><strong>Email:</strong> <a href={`mailto:${item.email}`}>{item.email}</a></p>}{item.address && <p className="resource-detail"><strong>Area / service location:</strong> {item.address}</p>}{item.hours && <p className="resource-detail"><strong>Availability:</strong> {item.hours}</p>}<div className="resource-card-actions"><button type="button" className={`resource-save-button ${savedIds.includes(String(item.id)) ? 'saved' : ''}`} onClick={() => toggleSaved(item.id)} aria-pressed={savedIds.includes(String(item.id))}><Heart size={15} fill={savedIds.includes(String(item.id)) ? 'currentColor' : 'none'} />{savedIds.includes(String(item.id)) ? 'Saved' : user ? 'Save resource' : 'Log in to save'}</button><a href={item.url} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm w-100 resource-link">{item.linkLabel || (item.type === 'scholarship' ? 'View scholarship / apply' : 'Visit website')} <ExternalLink size={14} aria-hidden="true" /></a></div></article>)}</div>
 

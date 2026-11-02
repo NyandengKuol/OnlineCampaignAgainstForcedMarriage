@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Search, ChevronDown, ChevronUp, HelpCircle, Send } from 'lucide-react';
 import { useAppData } from '../context/AppDataContext';
@@ -6,15 +6,21 @@ import './FAQPage.css';
 
 const FAQPage = () => {
   const { faqs, submitQuestion } = useAppData();
-  const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(() => searchParams.get('search') || '');
-  useEffect(() => setSearchQuery(searchParams.get('search') || ''), [searchParams]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchQuery = searchParams.get('search') || '';
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [openId, setOpenId] = useState(null);
   const [questionText, setQuestionText] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [questionError, setQuestionError] = useState('');
   const categories = ['All', 'Rights', 'Support', 'Prevention', 'Submitted'];
+
+  const updateSearchQuery = (value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) next.set('search', value);
+    else next.delete('search');
+    setSearchParams(next, { replace: true });
+  };
 
   const filteredFaqs = faqs.filter((faq) => {
     const categoryMatches = selectedCategory === 'All' || faq.category === selectedCategory;
@@ -38,7 +44,7 @@ const FAQPage = () => {
     <div className="page-header text-center"><div className="container"><span className="badge badge-primary mb-2">Help Center</span><h1>Frequently Asked Questions</h1><p className="page-subtitle">Find answers or ask us directly.</p></div></div>
     <div className="container section-padding">
       <div className="faq-controls-bar">
-        <div className="search-box"><Search size={18} className="search-icon" /><input type="search" placeholder="Search questions..." value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} /></div>
+        <div className="search-box"><Search size={18} className="search-icon" /><input type="search" placeholder="Search questions..." value={searchQuery} onChange={(event) => updateSearchQuery(event.target.value)} /></div>
         <div className="category-pills">{categories.map((category) => <button key={category} className={`pill-btn ${selectedCategory === category ? 'active' : ''}`} onClick={() => setSelectedCategory(category)}>{category}</button>)}</div>
       </div>
       <div className="faq-accordion-list">

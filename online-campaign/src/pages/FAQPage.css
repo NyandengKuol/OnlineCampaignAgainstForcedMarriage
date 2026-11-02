@@ -34,7 +34,8 @@
   transition: border-color var(--transition-fast);
 }
 
-.faq-item:hover, .faq-item.open {
+.faq-item:hover,
+.faq-item.open {
   border-color: var(--primary);
 }
 
@@ -55,8 +56,22 @@
   font-size: 0.95rem;
 }
 
-.faq-answer { display: block; width: 100%; }
-@media (max-width: 720px) { .faq-controls-bar { align-items: stretch; flex-direction: column; }.category-pills { flex-wrap: wrap; } .ask-question-card { padding: 1.25rem; } }
+.faq-answer {
+  display: block;
+  width: 100%;
+}
+@media (max-width: 720px) {
+  .faq-controls-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .category-pills {
+    flex-wrap: wrap;
+  }
+  .ask-question-card {
+    padding: 1.25rem;
+  }
+}
 
 .no-faqs {
   text-align: center;
@@ -67,7 +82,10 @@
 .ask-question-card {
   max-width: 800px;
   margin: 3rem auto 0 auto;
-  background: linear-gradient(90deg, rgb(255 255 255 / 96%), rgb(235 248 255 / 88%)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85') center/cover;
+  background:
+    linear-gradient(90deg, rgb(255 255 255 / 96%), rgb(235 248 255 / 88%)),
+    url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=85")
+      center/cover;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   padding: 2rem;
@@ -126,4 +144,6 @@
   text-align: center;
 }
 
-.mt-5 { margin-top: 3rem; }
+.mt-5 {
+  margin-top: 3rem;
+}

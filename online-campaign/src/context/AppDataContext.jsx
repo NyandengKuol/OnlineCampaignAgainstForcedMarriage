@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { getPosts, getFaqs, getResources, getInquiries, savePostRecord, deletePostRecord, saveInquiry, addPostComment, updatePostComment, deletePostComment, togglePostLikeRecord, updateReportRecord, moderatePostRecord, moderateCommentRecord, reportPostRecord, reportCommentRecord } from '../utils/storage';
 import { useAuth } from './AuthContext';
 
@@ -13,6 +13,9 @@ export const AppDataProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadData = useCallback(async () => {
+    // Yield before updating state so an effect that invokes this loader does not
+    // synchronously trigger a second render.
+    await Promise.resolve();
     setIsLoading(true);
     try {
       const [apiPosts, apiFaqs, apiResources] = await Promise.all([
@@ -184,11 +187,11 @@ export const AppDataProvider = ({ children }) => {
   };
   const getPostsCb = useCallback(() => posts, [posts]);
 
-  const value = useMemo(() => ({ 
+  const value = {
     posts, faqs, inquiries, resources, isLoading,
     addPost, updatePost, moderateComment, reportPost, reportComment, deletePost, getPosts: getPostsCb, refreshData: loadData, togglePostLike, addComment, editComment, removeComment,
     submitQuestion, submitInquiry, updateInquiry 
-  }), [posts, faqs, inquiries, resources, isLoading, getPostsCb, loadData]);
+  };
   
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;
 };
