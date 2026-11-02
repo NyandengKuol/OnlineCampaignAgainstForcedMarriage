@@ -141,14 +141,15 @@ body {
   transition: all 0.2s ease;
 }
 
-.btn-primary {
+.app-shell .btn-primary {
   background-color: var(--primary);
-  color: white;
+  color: #fff;
   box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
 }
 
-.btn-primary:hover {
+.app-shell .btn-primary:hover {
   background-color: var(--primary-dark);
+  color: #fff;
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(59, 130, 246, 0.23);
 }
