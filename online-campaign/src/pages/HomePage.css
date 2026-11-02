@@ -290,6 +290,8 @@
 .gallery-heading p {
   max-width: 390px;
   color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 700;
   line-height: 1.6;
 }
 .girl-gallery {
