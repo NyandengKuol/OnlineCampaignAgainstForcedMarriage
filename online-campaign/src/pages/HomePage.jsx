@@ -5,6 +5,10 @@ const photos = [
   {
     src: '/home-gallery-image.png',
     alt: 'A young girl in a green shirt sits outdoors holding an infant.'
+  },
+  {
+    src: '/home-gallery-classroom.png',
+    alt: 'A girl writes on a classroom blackboard.'
   }
 ];
 

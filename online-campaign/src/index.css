@@ -57,7 +57,7 @@ body {
 .app-shell select {
   font: inherit;
 }
-.app-shell button {
+:where(.app-shell button) {
   border: 0;
   background: none;
 }

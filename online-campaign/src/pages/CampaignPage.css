@@ -210,6 +210,16 @@
   color: var(--text-muted);
 }
 
+/* Keep the conversation sign-in action blue even before it is hovered. */
+.campaign-page .callout-widget .btn-primary {
+  background-color: #0077b6 !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgb(0 119 182 / 30%);
+}
+.campaign-page .callout-widget .btn-primary:hover {
+  background-color: #005b91 !important;
+}
+
 .widget-title {
   font-size: 1rem;
   font-weight: 700;
