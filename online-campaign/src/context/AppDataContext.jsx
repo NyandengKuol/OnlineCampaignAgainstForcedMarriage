@@ -124,11 +124,34 @@ export const AppDataProvider = ({ children }) => {
   const reportPost = async (id, reason) => { await reportPostRecord(id, reason); await loadData(); };
   const reportComment = async (id, reason) => { await reportCommentRecord(id, reason); await loadData(); };
   const togglePostLike = async (id) => {
-    const result = await togglePostLikeRecord(id);
-    setPosts((current) => current.map((post) => post.id === id
-      ? { ...post, likes: result.likes, isLiked: result.isLiked }
-      : post));
-    return result;
+    const post = posts.find((item) => item.id === id);
+    if (!post) throw new Error('This post is no longer available.');
+
+    // Update the UI before waiting for the network, so the heart and count respond
+    // immediately to a tap. Keep the previous values in case the request fails.
+    const previous = { likes: post.likes || 0, isLiked: Boolean(post.isLiked) };
+    const optimistic = {
+      likes: Math.max(0, previous.likes + (previous.isLiked ? -1 : 1)),
+      isLiked: !previous.isLiked
+    };
+    setPosts((current) => current.map((item) => item.id === id
+      ? { ...item, ...optimistic }
+      : item));
+
+    try {
+      const result = await togglePostLikeRecord(id);
+      setPosts((current) => current.map((item) => item.id === id
+        ? { ...item, likes: result.likes, isLiked: result.isLiked }
+        : item));
+      return result;
+    } catch (error) {
+      setPosts((current) => current.map((item) => item.id === id
+        // Do not overwrite a newer tap that has already changed this post again.
+        && item.likes === optimistic.likes && item.isLiked === optimistic.isLiked
+          ? { ...item, ...previous }
+          : item));
+      throw error;
+    }
   };
   const addComment = async (postId, text) => {
     const updatedPost = await addPostComment(postId, text);
